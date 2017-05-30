@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Name=Show Public IP
+Name[en_PH]=Show Public IP
+Icon=preferences-system-search-symbolic
+Exec=/bin/bash -c 'zenity --info --title="Public IP Address" --text="Your Public IP Address\nis $(wget http://ipinfo.io/ip -qO -)"'
+Comment[en_PH]=Show Public IP

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Encoding=UTF-8
+Type=Application
+Name=Show Internal IPs
+Name[en_PH]=Show Internal IPs
+Icon=preferences-system-search-symbolic
+Exec=/bin/bash -c 'zenity --info --title="IP Addresses" --text="$(/bin/get-ips.py)"'
+Comment[en_PH]=Show Public IP
