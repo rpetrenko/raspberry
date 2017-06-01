@@ -8,6 +8,9 @@ proc = subprocess.Popen(["ip", "addr", "show"],
 
 stdout, stderr = proc.communicate()
 
+if stderr:
+    raise Exception("cannot get ips with [ip addr show]")
+stdout = stdout.decode('utf-8')
 interfaces = {}
 name = None
 ip = None

@@ -6,4 +6,12 @@
 # /home/pi/.config/lxsession/LXDE-pi/autostart
 ############################################################
 
-zenity --info --title="IP Addresses" --text="$(/bin/get-ips.py)"
+fname=/bin/get-ips.py
+if [ -f "$fname" ];then
+    out=$($fname)
+    echo $out
+    zenity --list --title="IP Addresses" --column="Name" --column="IP" $out
+else
+    echo "bad"
+    zenity --error --title="Error" --text="not found $fname"
+fi
