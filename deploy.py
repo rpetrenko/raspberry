@@ -55,7 +55,7 @@ class Host(object):
 
 
 raspi_ip = os.environ['RPI_IP'] #'rpi3.local'
-username = os.environ['RPI_USER']  #'pi'
+username = os.environ.get('RPI_USER', 'pi')
 password = os.environ['RPI_PASSWORD']
 host = Host(raspi_ip, username, password)
 
