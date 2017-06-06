@@ -1,0 +1,7 @@
+{
+  "dsp_on": ["display.sh", "on"],
+  "dsp_off": ["display.sh", "off"],
+  "pic": ["take_image.sh"],
+  "pic_last": "",
+  "temp_kitchen": ""
+}

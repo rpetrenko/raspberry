@@ -69,7 +69,7 @@ def main():
         credentials = google.oauth2.credentials.Credentials(token=None,
                                                             **json.load(f))
 
-    cl = TextProcessor("rpi_actions/words.txt")
+    cl = TextProcessor("rpi_actions/words.txt", "rpi_actions/actions.json")
     with Assistant(credentials) as assistant:
         for event in assistant.start():
             process_event(event, cl)

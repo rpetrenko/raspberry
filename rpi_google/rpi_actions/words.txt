@@ -2,3 +2,4 @@ screen on,dsp_on
 screen off,dsp_off
 take a picture,pic
 show last picture taken,pic_last
+show temperature in my kitchen,temp_kitchen
