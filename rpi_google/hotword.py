@@ -20,13 +20,13 @@ from __future__ import print_function
 import argparse
 import os.path
 import json
-import subprocess
 
 import google.oauth2.credentials
-
 from google.assistant.library import Assistant
 from google.assistant.library.event import EventType
 from google.assistant.library.file_helpers import existing_file
+
+from rpi_actions.actions import execute_event
 
 
 def process_event(event):
@@ -46,15 +46,7 @@ def process_event(event):
         print("Event args {}".format(event.args.items()))
 
     if event.type == EventType.ON_RECOGNIZING_SPEECH_FINISHED:
-        print('====')
-        # print(event.args.items())
-        words = event.args['text'].split()
-        print("words: [{}]".format(words))
-        if set(['turn', 'screen', 'off']) == set(words):
-            subprocess.call(['/home/pi/bin/display.sh', 'off'])
-        if set(['turn', 'screen', 'on']) == set(words):
-            subprocess.call(['/home/pi/bin/display.sh', 'on'])
-        print('========')
+        execute_event(event.args['text'])
 
     if (event.type == EventType.ON_CONVERSATION_TURN_FINISHED and
             event.args and not event.args['with_follow_on_turn']):
