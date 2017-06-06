@@ -2,7 +2,7 @@
 import paramiko
 import os
 import sys
-
+import re
 
 class Host(object):
     def __init__(self, ip, username, password, connect=True):
@@ -22,6 +22,7 @@ class Host(object):
     def _exec(self, cmd, sudo=None):
         if sudo:
             cmd = "sudo -S -p '' {}".format(cmd)
+        print(cmd)
         sin, sout, serr = self.ssh.exec_command(cmd)
         if sudo:
             sin.write(self.password + "\n")
@@ -39,18 +40,20 @@ class Host(object):
         self.ssh.close()
 
     def copy_files(self, local_path, remote_path):
+        self._exec("mkdir -p {}".format(remote_path))
         sftp = self.ssh.open_sftp()
-        remote_home = "/home/pi/"
 
         for path, dirs, files in os.walk(local_path):
             for f in files:
                 fname = os.path.join(path, f)
-                fname_remote = os.path.join(remote_home, f)
+                fname_remote = os.path.join(remote_path, f)
+                print("copy [{}] [{}]".format(fname, fname_remote))
                 sftp.put(fname, fname_remote)
-                if 'bin/' in remote_path:
+                if re.search(r'\.(sh|py)$', f):
                     self._exec("chmod +x {}".format(fname_remote))
-                self._exec("mv {} {}".format(fname_remote, remote_path),
-                           sudo=True)
+                if 'resource' in remote_path:
+                    self._exec("mv {} {}".format(fname_remote, remote_path),
+                               sudo=True)
         sftp.close()
 
 

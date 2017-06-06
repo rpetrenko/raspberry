@@ -7,12 +7,12 @@ if [ $# -eq 0 ]; then
 fi
 
 if [ $1 = "off" ]; then
-  echo -en "Turning monitor off..."
+  echo -en "Turning display off..."
   xset dpms force off
   echo -en "done.\nCheck:"
-  xset -q|grep "Monitor is"
+  xset -q|grep "Display is"
 elif [ $1 = "on" ]; then
-  echo -en "Turning monitor on..."
+  echo -en "Turning display on..."
   xset dpms force on
   echo -en "done.\nCheck:"
   xset -q|grep "Monitor is"

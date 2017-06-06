@@ -4,5 +4,5 @@ Type=Application
 Name=Show Internal IPs
 Name[en_PH]=Show Internal IPs
 Icon=preferences-system-search-symbolic
-Exec=/bin/bash /bin/get-ips.sh
+Exec=/bin/bash /home/pi/bin/get-ips.sh
 Comment[en_PH]=Show Public IP

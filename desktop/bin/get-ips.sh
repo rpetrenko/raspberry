@@ -6,7 +6,7 @@
 # /home/pi/.config/lxsession/LXDE-pi/autostart
 ############################################################
 
-fname=/bin/get-ips.py
+fname=${HOME}/bin/get-ips.py
 if [ -f "$fname" ];then
     out=$($fname)
     echo $out
