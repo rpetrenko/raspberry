@@ -26,10 +26,10 @@ from google.assistant.library import Assistant
 from google.assistant.library.event import EventType
 from google.assistant.library.file_helpers import existing_file
 
-from rpi_actions.actions import execute_event
+from rpi_actions.actions import TextProcessor
 
 
-def process_event(event):
+def process_event(event, epr):
     """Pretty prints events.
 
     Prints all events that occur with two spaces between each new
@@ -46,7 +46,7 @@ def process_event(event):
         print("Event args {}".format(event.args.items()))
 
     if event.type == EventType.ON_RECOGNIZING_SPEECH_FINISHED:
-        execute_event(event.args['text'])
+        epr.process_text(event.args['text'])
 
     if (event.type == EventType.ON_CONVERSATION_TURN_FINISHED and
             event.args and not event.args['with_follow_on_turn']):
@@ -69,9 +69,10 @@ def main():
         credentials = google.oauth2.credentials.Credentials(token=None,
                                                             **json.load(f))
 
+    cl = TextProcessor("rpi_actions/words.txt")
     with Assistant(credentials) as assistant:
         for event in assistant.start():
-            process_event(event)
+            process_event(event, cl)
 
 
 if __name__ == '__main__':

@@ -1,8 +1,4 @@
-turn screen|monitor|display on
-display.sh on
-turn screen|monitor|display off
-display.sh off
-take picture|image
-take_image.sh
-get internal|my ip|ips
-get-ips.py
+screen on,dsp_on
+screen off,dsp_off
+take a picture,pic
+show last picture taken,pic_last
