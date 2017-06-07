@@ -22,14 +22,16 @@ class TextProcessor(object):
     def _exec(self, cmd_l):
         if cmd_l:
             print(cmd_l)
-            # subprocess.call(cmd_l)
+            subprocess.call(cmd_l)
         else:
             raise Exception("action not defined")
 
     def process_text(self, event_text):
         print('== execute start ==')
         tag = self.cl.classify(event_text)
-        if tag in self.actions:
+        if tag == "noop":
+            pass
+        elif tag in self.actions:
             act = self.actions[tag]
             print("found tag {}, executing action {}".format(tag, act))
             self._exec(act)
