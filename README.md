@@ -1,4 +1,4 @@
-# pi setup
+# Pi setup
 * create file /home/pi/.bash_aliases
 * add home path there
 ```bash
@@ -37,4 +37,6 @@ python rpi-google/hotword.py
 * my agenda
 * temperature now
 * how many days till june 12th
-* 
+
+## TODO
+* create example using pushtotalk.py
