@@ -38,5 +38,17 @@ python rpi-google/hotword.py
 * temperature now
 * how many days till june 12th
 
-## TODO
-* create example using pushtotalk.py
+## Upgrade
+* upgrade packages
+```bash
+pip install --upgrade google-assistant-sdk
+pip install --upgrade google-assistant-sdk[samples]
+```
+* verify samples work
+```bash
+googlesamples-assistant-pushtotalk
+googlesamples-assistant-hotword
+```
+
+/home/pi/env/lib/python3.4/site-packages/googlesamples/assistant/library/hotword.py  
+/home/pi/env/lib/python3.4/site-packages/googlesamples/assistant/grpc/pushtotalk.py                                               │
