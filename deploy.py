@@ -56,6 +56,9 @@ class Host(object):
         sftp.close()
         local_host.run_cmd("rm {}".format(fname_zip))
         self._exec("tar xvzf {}".format(fname_remote))
+        if '/bin' in fname_remote:
+            bin_dir = fname_remote.replace('.tar.gz', '/')
+            self._exec("chmod -R +x {}".format(bin_dir))
 
 
 raspi_ip = os.environ['RPI_IP'] #'rpi3.local'

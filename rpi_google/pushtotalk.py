@@ -28,6 +28,8 @@ from google.assistant.embedded.v1alpha1 import embedded_assistant_pb2
 from google.rpc import code_pb2
 from tenacity import retry, stop_after_attempt, retry_if_exception
 
+from rpi_actions.actions import TextProcessor
+
 try:
     from . import (
         assistant_helpers,
@@ -88,7 +90,7 @@ class SampleAssistant(object):
 
     @retry(reraise=True, stop=stop_after_attempt(3),
            retry=retry_if_exception(is_grpc_error_unavailable))
-    def converse(self):
+    def converse(self, cl):
         """Send a voice request to the Assistant and playback the response.
 
         Returns: True if conversation should continue.
@@ -97,12 +99,13 @@ class SampleAssistant(object):
 
         self.conversation_stream.start_recording()
         logging.info('Recording audio request.')
-
+        custom_response = False
         def iter_converse_requests():
             for c in self.gen_converse_requests():
                 assistant_helpers.log_converse_request_without_audio(c)
                 yield c
-            self.conversation_stream.start_playback()
+            if not custom_response:
+                self.conversation_stream.start_playback()
 
         # This generator yields ConverseResponse proto messages
         # received from the gRPC Google Assistant API.
@@ -116,10 +119,16 @@ class SampleAssistant(object):
                 logging.info('End of audio request detected')
                 self.conversation_stream.stop_recording()
             if resp.result.spoken_request_text:
+                request_text = resp.result.spoken_request_text
                 logging.info('Transcript of user request: "%s".',
-                             resp.result.spoken_request_text)
-                logging.info('Playing assistant response.')
-            if len(resp.audio_out.audio_data) > 0:
+                             request_text)
+
+                logging.info("Processing now: {}".format(request_text))
+                custom_response = cl.process_text(request_text)
+                if not custom_response:
+                    logging.info('Playing assistant response.')
+
+            if not custom_response and len(resp.audio_out.audio_data) > 0:
                 self.conversation_stream.write(resp.audio_out.audio_data)
             if resp.result.spoken_response_text:
                 logging.info(
@@ -298,6 +307,7 @@ def main(api_endpoint, credentials, verbose,
         sample_width=audio_sample_width,
     )
 
+    cl = TextProcessor("rpi_actions/words.txt", "rpi_actions/actions.json")
     with SampleAssistant(conversation_stream,
                          grpc_channel, grpc_deadline) as assistant:
         # If file arguments are supplied:
@@ -314,7 +324,7 @@ def main(api_endpoint, credentials, verbose,
         while True:
             if wait_for_user_trigger:
                 click.pause(info='Press Enter to send a new request...')
-            continue_conversation = assistant.converse()
+            continue_conversation = assistant.converse(cl)
             # wait for user trigger if there is no follow-up turn in
             # the conversation.
             wait_for_user_trigger = not continue_conversation

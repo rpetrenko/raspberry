@@ -2,6 +2,11 @@ import subprocess
 import json
 from textblob import TextBlob
 from textblob.classifiers import NaiveBayesClassifier
+import os
+
+bin_dir = "{}/bin".format(os.environ["HOME"])
+if bin_dir not in os.environ["PATH"]:
+    os.environ["PATH"] = "{}:{}".format(os.environ["PATH"], bin_dir)
 
 
 class TextProcessor(object):
@@ -27,18 +32,16 @@ class TextProcessor(object):
             raise Exception("action not defined")
 
     def process_text(self, event_text):
-        print('== execute start ==')
         tag = self.cl.classify(event_text)
-        if tag == "noop":
-            pass
-        elif tag in self.actions:
-            act = self.actions[tag]
-            print("found tag {}, executing action {}".format(tag, act))
-            self._exec(act)
-        else:
-            raise NotImplementedError(tag)
+        print("== Found tag [{}] ==".format(tag))
+        if tag == "noop" or tag not in self.actions:
+            return False
+        print('== execute start ==')
+        act = self.actions[tag]
+        print("Executing action {}".format(act))
+        self._exec(act)
         print('== execute done ==')
-
+        return True
 
 if __name__ == "__main__":
     epr = TextProcessor("words.txt", "actions.json")
